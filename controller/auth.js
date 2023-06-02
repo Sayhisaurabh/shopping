@@ -66,4 +66,107 @@ try {
 }
 }
 //login end
-module.exports = {register,login}
+//get all Users
+const getUsers = async(req,res)=>{
+    try {
+        // const {id} = req.user.id
+        // const loginUser = await User.findOne({id}).select('name')
+        const users = await User.find({})
+        res.status(200).json({
+            message:"success",
+            status :true,
+            data:users    
+        })
+    } catch (error) {
+        res.status(400).json({
+            message:error.message,
+            status :false,
+            data:null
+        })
+    }
+}
+//get all Users
+//get single user
+const getSingleUser = async(req,res)=>{
+    try {
+        const {id} = req.params
+        const getSingle = await User.findById(id)
+        if(getSingle){
+            res.status(200).json({
+                message:"Success",
+                status :true,
+                data:getSingle
+            }) 
+        }else{
+            res.status(400).json({
+                message:"User Not Found",
+                status :false,
+                data:null
+            })  
+        }
+    } catch (error) {
+        res.status(400).json({
+            message:error.message,
+            status :false,
+            data:null
+        }) 
+    }
+}
+//get single user
+//update single user
+const updateSingleUser = async(req,res)=>{
+    try {
+        const {id} = req.params
+        const update = await User.findByIdAndUpdate(id,req.body)
+        if(update){
+            const updatedUser = await User.findById(id);
+            res.status(200).json({
+                message:"Updated Successfully",
+                status :true,
+                data:updatedUser
+            }) 
+        }else{
+            res.status(400).json({
+                message:"User Not Found",
+                status :false,
+                data:null
+            }) 
+        }
+    } catch (error) {
+        res.status(400).json({
+            message:error.message,
+            status :false,
+            data:null
+        }) 
+    }
+}
+//update single user
+//delete single user
+const deleteSingleUser = async(req,res)=>{
+    try {
+        const {id} = req.params
+        const deletedUser = await User.findByIdAndDelete(id)
+        if(deletedUser){
+            res.status(200).json({
+                message:"User Deleted Succesfully",
+                status :true,
+                data:deletedUser
+            })  
+        }else{
+            res.status(400).json({
+                message:"User Not Found",
+                status :false,
+                data:null
+            })
+        }
+    } catch (error) {
+        res.status(400).json({
+            message:error.message,
+            status :false,
+            data:null
+        }) 
+    }
+}
+//delete single user
+
+module.exports = {register,login,getUsers,getSingleUser,updateSingleUser,deleteSingleUser}
