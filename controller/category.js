@@ -46,7 +46,7 @@ const getCategory = async(req,res)=>{
                 from: 'reviews',
                 localField: 'products._id',
                 foreignField: 'product_id',
-                as: 'reviews'
+                as: 'products.reviews'
               }
             }
           ]) 
