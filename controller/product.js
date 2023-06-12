@@ -30,7 +30,11 @@ res.status(400).json({
 
 const getProducts = async(req,res)=>{
     try {
-        const get = await Product.find({}).populate('cat_id','name')
+      const {name,price} = req.query
+      const query = {}
+      if(name){  query.name = {$regex :name ,$options : "i"}  }
+      if(price){query.price = {$lte : price} }
+        const get = await Product.find(query).populate('cat_id','name')
         res.status(400).json({
             message:"All Products",
             status :true,
