@@ -4,9 +4,10 @@ const User = require('../model/user')
 const authMiddleware = async(req,res,next)=>{
 try {
     const token = req.headers.authorization.split(" ")[1]
-    const loginUser = await jwt.verify(token,process.env.PRIVATE_KEY)
-    if(loginUser){
-        req.userId = loginUser.id
+    const {email} = await jwt.verify(token,process.env.PRIVATE_KEY)
+     const user = await User.findOne({email})
+    if(user){
+        req.user = user
         next();
     }else{
         res.status(400).json({
@@ -27,9 +28,8 @@ try {
 
 const isAdmin = async (req,res,next)=>{
     try {
-        const id = req.userId;
-        const loginUser = await User.findById(id)
-        if(loginUser.role == 'admin'){
+        const {role} = req.user
+        if(role == 'ADMIN'){
                 next()
         }else{
             res.status(400).json({

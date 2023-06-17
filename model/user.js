@@ -24,17 +24,22 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
         default: "user"
+    },
+    token:{
+        type:String,
+        required:true
     }
 },
 {
     timestamps:true
 });
 
-userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 10)
-});
+// userSchema.pre('save', async function (next) {
+//   this.password = await bcrypt.hash(this.password, 10)
+// });
 userSchema.methods.isPasswordMatched = async function (userPassword){
 return await bcrypt.compare(userPassword, this.password)
 }
+ 
 //Export the model
 module.exports = mongoose.model('User', userSchema);
