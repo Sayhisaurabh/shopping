@@ -18,8 +18,7 @@ const register = async(req,res)=>{
             name : name,
             email : email,
             mobile : mobile,
-            password : bycrptPass,
-            token : token
+            password : bycrptPass
             })
             res.status(200).json({
                message:"User Register Successfully",
@@ -45,22 +44,16 @@ try {
     const isUser = await User.findOne({email})
     if(isUser && await isUser.isPasswordMatched(password)){
         const token = generateToken(email);
+        // await User.findByIdAndUpdate(isUser.id,{token:token})
         res.status(200).json({
             message:"Login Successfully",
             status :true,
-            data:{
-             "id":isUser?._id,
-             "name":isUser?.name,
-             "email":isUser?.email,
-             "mobile":isUser?.mobile,
-            },
             token:token
         }) 
     }else{
         res.status(400).json({
             message:"Credential Not Match In Our Records",
-            status :false,
-            data:null
+            status :false
         }) 
     }
 } catch (error) {

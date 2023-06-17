@@ -24,10 +24,6 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
         default: "user"
-    },
-    token:{
-        type:String,
-        required:true
     }
 },
 {
