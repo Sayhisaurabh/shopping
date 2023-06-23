@@ -84,8 +84,39 @@ const addToCart = async(req,res)=>{
         }) 
     }
 }
+
+// add to Wishlist
+
+const addToWishlist = async(req,res)=>{
+    try {
+      const {productId} = req.body
+      const {_id} = req.user
+      const isAlready = await User.findOne({_id,wishlist:productId})
+      if(isAlready){
+        await User.findOneAndUpdate({_id},{$pull:{wishlist:productId}})
+        res.status(400).json({
+            message:"Product Remove From Wishlist",
+            status :true,
+        })
+      }else{
+        await User.findOneAndUpdate({_id},{$push:{wishlist:productId}})
+        res.status(400).json({
+          message:"Product Added To Wishlist",
+          status :true,
+      })
+      }
+     
+    } catch (error) {
+        res.status(400).json({
+            message:error.message,
+            status :false,
+             
+        }) 
+    }
+}
 module.exports = {
     addProduct,
     getProducts,
-    addToCart
+    addToCart,
+    addToWishlist
 }
