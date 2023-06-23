@@ -24,7 +24,17 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
         default: "user"
-    }
+    },
+    token:[{
+        type:String,
+        required:true,
+    }],
+    cart:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Product',
+        unique:true
+    }]
+    
 },
 {
     timestamps:true
