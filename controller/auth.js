@@ -67,6 +67,35 @@ try {
 }
 }
 //login end
+//logout user
+const logout = async(req,res)=>{
+    try {
+        const {_id} = req.user
+        const token = req.getToken
+const logout  = await User.findOneAndUpdate({_id},{$pull:{token:token}})
+if(logout){
+    res.status(200).json({
+        message:"Logout Successfully",
+        status :true,
+         
+    })
+}else{
+    res.status(400).json({
+        message:"Please Login First",
+        status :false,
+         
+    })
+}
+
+    } catch (error) {
+        res.status(400).json({
+            message:error.message,
+            status :false,
+            data:null
+        })
+    }
+}
+//logout user
 //get all Users
 const getUsers = async(req,res)=>{
     try {
@@ -170,4 +199,4 @@ const deleteSingleUser = async(req,res)=>{
 }
 //delete single user
 
-module.exports = {register,login,getUsers,getSingleUser,updateSingleUser,deleteSingleUser}
+module.exports = {register,login,logout,getUsers,getSingleUser,updateSingleUser,deleteSingleUser}
