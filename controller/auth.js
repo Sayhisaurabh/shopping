@@ -18,7 +18,8 @@ const register = async(req,res)=>{
             name : name,
             email : email,
             mobile : mobile,
-            password : bycrptPass
+            password : bycrptPass,
+            token : token
             })
             res.status(200).json({
                message:"User Register Successfully",
@@ -43,8 +44,9 @@ try {
     const {email,password} = req.body
     const isUser = await User.findOne({email})
     if(isUser && await isUser.isPasswordMatched(password)){
+        const {_id} = isUser
         const token = generateToken(email);
-        // await User.findByIdAndUpdate(isUser.id,{token:token})
+        await User.findOneAndUpdate({_id},{$push:{token:token}})
         res.status(200).json({
             message:"Login Successfully",
             status :true,
