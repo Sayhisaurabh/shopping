@@ -14,18 +14,18 @@ router.delete('/user/:id',authMiddleware,isAdmin,deleteSingleUser)
 router.get('/sendMail',async (req,res)=>{
 try {
     const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: "smtp.gmail.com",
+  port: 465,
   auth: {
      
-    user: '8ec800189b3429',
-    pass: '91d6108f25d84d'
+    user: 'sayhisaurabh@gmail.com',
+    pass: 'vpzaahrkrcwnyhde'
   }
 });
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: 'sayhisaurabh@gmail.com', // sender address
-    to: "sayhisaurabh@gmail.com", // list of receivers
+    to: "dipanshutechgithub@gmail.com", // list of receivers
     subject: "Hello ✔", // Subject line
     text: "Hello world?", // plain text body
     html: "<b>Hello world?</b>", // html body
