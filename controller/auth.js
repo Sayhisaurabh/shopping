@@ -1,4 +1,5 @@
 const { generateToken,passwordbcrypt} = require("../helper/helper");
+const { sendMail } = require("../helper/mail");
 const User = require("../model/user");
 //register start
 const register = async(req,res)=>{
@@ -14,13 +15,14 @@ const register = async(req,res)=>{
         }else{
             const token = generateToken(email)
             const bycrptPass = await passwordbcrypt(password)
-            await User.create({
+           const data =  await User.create({
             name : name,
             email : email,
             mobile : mobile,
             password : bycrptPass,
             token : token
             })
+            sendMail(data,'New Register','register');
             res.status(200).json({
                message:"User Register Successfully",
                status :true,
