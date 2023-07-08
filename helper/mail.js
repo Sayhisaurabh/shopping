@@ -6,18 +6,18 @@ const sendMail = async(data,subject,template)=>{
    
         const filePath = path.join(__dirname, '..', 'mail', `${template}.ejs`);
         const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
+            host: process.env.HOST,
+            port: process.env.MAIL_PORT,
             auth: {
                
-              user: 'sayhisaurabh@gmail.com',
-              pass: 'vpzaahrkrcwnyhde'
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASSWORD
             }
           })
           const templateFile = fs.readFileSync(filePath, 'utf-8');
             const renderedTemplate = ejs.render(templateFile, data);
             const info = await transporter.sendMail({
-                from: 'sayhisaurabh@gmail.com', 
+                from: process.env.FROM, 
                 to: data.email,
                 subject: subject, 
                 html: renderedTemplate,
