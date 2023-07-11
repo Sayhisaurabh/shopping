@@ -1,9 +1,10 @@
-const { generateToken,passwordbcrypt} = require("../helper/helper");
+const { generateToken,passwordbcrypt,generateRandmonString} = require("../helper/helper");
 const { sendMail } = require("../helper/mail");
 const User = require("../model/user");
 //register start
 const register = async(req,res)=>{
     try {
+         
         const {name,email,mobile,password} = req.body
         const isAlready = await User.findOne({email})
         if(isAlready){
@@ -201,4 +202,85 @@ const deleteSingleUser = async(req,res)=>{
 }
 //delete single user
 
-module.exports = {register,login,logout,getUsers,getSingleUser,updateSingleUser,deleteSingleUser}
+///forgot Password
+
+const forgotPassword = async(req,res)=>{
+    try {
+        const {email} =req.body;
+        const isUser = await User.findOne({email:email})
+        if(isUser){
+            const {_id } = isUser;
+        const refreshToken = await generateRandmonString();
+        const updateUser = await User.findByIdAndUpdate(_id,{refreshToken : refreshToken},{new :true})
+        sendMail(updateUser,'Forgot Password','forgot-password')
+        res.status(400).json({
+            success :true,
+            message:"Please Check Your Mail for Forgot Password Link"
+        }) 
+        }else{
+            res.status(400).json({
+                success :false,
+                message:"This Email Does Not Exists",
+                data:null
+            })  
+        }
+    } catch (error) {
+        res.status(400).json({
+            success :false,
+            message:error.message,
+            data:null
+        }) 
+    }
+}
+///forgot Password
+// reset Password
+
+const resetPassword = async (req,res)=>{
+try {
+    const {token} = req.query
+    const {password}=req.body
+    if(password){
+        const isUser = await User.findOne({refreshToken:token})
+        if(isUser){
+            const {_id}= isUser
+            const bcryptPassword = await passwordbcrypt(password);
+    const update  = await User.findByIdAndUpdate(_id,{password : bcryptPassword})
+    res.status(400).json({
+        success :true,
+        message:"Password Updated Successfully",
+        data:null
+    }) 
+        }else{
+            res.status(400).json({
+                success :false,
+                message:"Token is Invalid Please Check Your Email",
+                data:null
+            }) 
+        }
+    }else{
+        res.status(400).json({
+            success :false,
+            message:"Please Fill Password",
+            data:null
+        })
+    }
+   
+} catch (error) {
+    res.status(400).json({
+        success :false,
+        message:error.message,
+        data:null
+    }) 
+}
+}
+// reset Password
+module.exports = {register,
+    login,
+    logout,
+    getUsers,
+    getSingleUser,
+    updateSingleUser,
+    deleteSingleUser,
+    forgotPassword,
+    resetPassword
+}

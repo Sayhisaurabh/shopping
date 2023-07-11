@@ -22,6 +22,7 @@ const sendMail = async(data,subject,template)=>{
                 subject: subject, 
                 html: renderedTemplate,
               });
+              // console.log(info)
               return info
 }
 

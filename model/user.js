@@ -29,15 +29,17 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
     }],
+    refreshToken:{
+        type:String,
+        required:false,
+    },
     cart:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Product',
-        unique:true
     }],
     wishlist:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Product',
-        unique:true
     }]
     
 },
