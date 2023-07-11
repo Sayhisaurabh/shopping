@@ -32,23 +32,37 @@ res.status(400).json({
 
 const getProducts = async(req,res)=>{
     try {
-      const {name,price,page} = req.query
-      const limit = 3
+      const {name,price,page,category} = req.query
+      const limit = 13
       const skip = (page -1)*limit
       const query = {}
       if(name){  query.name = {$regex :name ,$options : "i"}  }
       if(price){query.price = {$lte : price} }
+      if(category){
+        const cat_id = req.query.category ? req.query.category.split(',') : [];
+        query.cat_id = {$in : cat_id} 
+    }
         const get = await Product.find(query).populate('cat_id','name').skip(skip).limit(limit)
-        res.status(400).json({
-            message:"All Products",
-            status :true,
-            length : get.length,
-            data:get,
-        })
+        if(get.length > 0){
+            res.status(400).json({
+                success :true,
+                message:"All Products",
+                length : get.length,
+                data:get,
+            })
+        }else{
+            res.status(400).json({
+                success :true,
+                message:"No Product Found",
+                length : get.length,
+                data:get,
+            })
+        }
+       
     } catch (error) {
         res.status(400).json({
+            success :false,
             message:error.message,
-            status :false,
             data:null
         }) 
     }

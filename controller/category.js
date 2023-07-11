@@ -27,29 +27,45 @@ try {
 }
 }
 // get category
+// const getCategory = async(req,res)=>{
+//     try {
+//         const allCategory = await Category.aggregate([
+//             {
+//               $lookup: {
+//                 from: 'products',
+//                 localField: '_id',
+//                 foreignField: 'cat_id',
+//                 as: 'products'
+//               }
+//             },
+//             {
+//                 $unwind: '$products' // Unwind the first lookup array
+//               },
+//               {
+//               $lookup: {
+//                 from: 'reviews',
+//                 localField: 'products._id',
+//                 foreignField: 'product_id',
+//                 as: 'products.reviews'
+//               }
+//             }
+//           ]) 
+//         res.status(200).json({
+//             message:"All Category",
+//             status :true,
+//             data:allCategory
+//         })
+//     } catch (error) {
+//         res.status(400).json({
+//             message:error.message,
+//             status :false,
+//             data:null
+//         })  
+//     }
+// }
 const getCategory = async(req,res)=>{
     try {
-        const allCategory = await Category.aggregate([
-            {
-              $lookup: {
-                from: 'products',
-                localField: '_id',
-                foreignField: 'cat_id',
-                as: 'products'
-              }
-            },
-            {
-                $unwind: '$products' // Unwind the first lookup array
-              },
-              {
-              $lookup: {
-                from: 'reviews',
-                localField: 'products._id',
-                foreignField: 'product_id',
-                as: 'products.reviews'
-              }
-            }
-          ]) 
+        const allCategory = await Category.find({}) 
         res.status(200).json({
             message:"All Category",
             status :true,
