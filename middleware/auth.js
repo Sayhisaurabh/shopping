@@ -57,4 +57,24 @@ const isAdmin = async (req,res,next)=>{
         })
     }
 }
-module.exports = {authMiddleware,isAdmin}
+const isPremium = async(req,res,next)=>{
+try {
+    const {premium,premiumTill} = req.user
+    if(premium == true && premiumTill >= new Date()){
+         next()
+    }else{
+        res.status(200).json({
+            success :false,
+            message:"You Not Have a Subcription Plan",
+             
+        })  
+    }
+} catch (error) {
+    res.status(400).json({
+        message:error.message,
+        status :false
+         
+    }) 
+}
+}
+module.exports = {authMiddleware,isAdmin,isPremium}

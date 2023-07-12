@@ -1,6 +1,8 @@
 const { generateToken,passwordbcrypt,generateRandmonString} = require("../helper/helper");
 const { sendMail } = require("../helper/mail");
 const User = require("../model/user");
+const Subscription = require('../model/subscription')
+const {addDays,subDays,format} = require('date-fns')
 //register start
 const register = async(req,res)=>{
     try {
@@ -274,6 +276,56 @@ try {
 }
 }
 // reset Password
+
+const subscription = async(req,res)=>{
+try {
+    const {amount,days} = req.body
+    const {_id} = req.user
+    const premiumTill = addDays(new Date(),days)
+const update  = await User.findByIdAndUpdate(_id,{premium:true,premiumTill : premiumTill})
+if(update){
+const subsData = new Subscription({
+user_id : _id,
+premiumTill : premiumTill,
+amount : amount,
+paymentMethod : 'Paytm',
+})
+subsData.save();
+    res.status(200).json({
+        success :true,
+        message:"You Have Successfully Buy Premium Plan",
+        data:null
+    })
+}
+ 
+} catch (error) {
+    res.status(400).json({
+        success :false,
+        message:error.message,
+        data:null
+    }) 
+}
+}
+const subscriptionList = async(req,res)=>{
+    try {
+        const list = await Subscription.find({}).populate('user_id','name').lean();
+        list.forEach((x) => {
+            x.premiumTill = format(x.premiumTill, 'dd-MMMM-yyyy hh:mm a');
+            x.createdAt = format(x.createdAt, 'dd-MMMM-yyyy hh:mm a');
+          })
+        res.status(200).json({
+            success :true,
+            message:"All Subscription Users List",
+            data:list
+        }) 
+    } catch (error) {
+        res.status(400).json({
+            success :false,
+            message:error.message,
+            data:null
+        })  
+    }
+}
 module.exports = {register,
     login,
     logout,
@@ -282,5 +334,7 @@ module.exports = {register,
     updateSingleUser,
     deleteSingleUser,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    subscription,
+    subscriptionList
 }
