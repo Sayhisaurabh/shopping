@@ -51,7 +51,7 @@ const isAdmin = async (req,res,next)=>{
         }
     } catch (error) {
         res.status(400).json({
-            message:"This Route is Only For Admin",
+            message:error.message,
             status :false
              
         })

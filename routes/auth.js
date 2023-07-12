@@ -12,5 +12,5 @@ router.get('/user/:id',authMiddleware,isAdmin,getSingleUser)
 router.patch('/user/:id',authMiddleware,isAdmin,updateSingleUser)
 router.delete('/user/:id',authMiddleware,isAdmin,deleteSingleUser)
 router.post('/forgot-password',authMiddleware,forgotPassword)
-router.get('/reset-password',authMiddleware,resetPassword)
+router.post('/reset-password/:token',authMiddleware,resetPassword)
 module.exports = router;
