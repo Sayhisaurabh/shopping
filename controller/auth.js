@@ -213,12 +213,12 @@ const forgotPassword = async(req,res)=>{
         const refreshToken = await generateRandmonString();
         const updateUser = await User.findByIdAndUpdate(_id,{refreshToken : refreshToken},{new :true})
         sendMail(updateUser,'Forgot Password','forgot-password')
-        res.status(400).json({
+        res.status(200).json({
             success :true,
             message:"Please Check Your Mail for Forgot Password Link"
         }) 
         }else{
-            res.status(400).json({
+            res.status(200).json({
                 success :false,
                 message:"This Email Does Not Exists",
                 data:null
@@ -245,20 +245,20 @@ try {
             const {_id}= isUser
             const bcryptPassword = await passwordbcrypt(password);
     const update  = await User.findByIdAndUpdate(_id,{password : bcryptPassword})
-    res.status(400).json({
+    res.status(200).json({
         success :true,
         message:"Password Updated Successfully",
         data:null
     }) 
         }else{
-            res.status(400).json({
+            res.status(200).json({
                 success :false,
                 message:"Token is Invalid Please Check Your Email",
                 data:null
             }) 
         }
     }else{
-        res.status(400).json({
+        res.status(200).json({
             success :false,
             message:"Please Fill Password",
             data:null
