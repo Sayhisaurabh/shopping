@@ -40,7 +40,15 @@ var userSchema = new mongoose.Schema({
     wishlist:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Product',
-    }]
+    }],
+    premium :{
+        type : Boolean,
+        default :false
+    },
+    premiumTill :{
+       type : Date,
+       required:false,
+    }
     
 },
 {
