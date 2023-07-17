@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors');
 const connectDB = require('./cofig');
 const  authRoutes  = require('./routes/auth');
 const categoryRoutes = require('./routes/category')
@@ -7,6 +8,7 @@ const reviewRoutes = require('./routes/review')
 const app = express()
 require('dotenv').config()
 connectDB();
+app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 //routes

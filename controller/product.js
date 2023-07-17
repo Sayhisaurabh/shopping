@@ -1,6 +1,6 @@
 const Product = require("../model/product");
 const User = require('../model/user')
-const { findByIdAndUpdate, findOne, findByIdAndRemove } = require("../model/user");
+const {addDays,subDays,format} = require('date-fns')
 //add Product
 const addProduct = async(req,res)=>{
     try {
@@ -42,7 +42,11 @@ const getProducts = async(req,res)=>{
         const cat_id = req.query.category ? req.query.category.split(',') : [];
         query.cat_id = {$in : cat_id} 
     }
-        const get = await Product.find(query).populate('cat_id','name').skip(skip).limit(limit)
+        const get = await Product.find(query).populate('cat_id','name').skip(skip).limit(limit).lean()
+        get.forEach((x) => {
+            x.createdAt = format(x.createdAt, 'dd-MMMM-yyyy');
+          })
+      
         if(get.length > 0){
             res.status(400).json({
                 success :true,
